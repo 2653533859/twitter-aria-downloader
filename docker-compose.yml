@@ -1,0 +1,23 @@
+version: '3'
+services:
+  app:
+    build: .
+    ports:
+      - "5001:5001"
+    environment:
+      - ARIA2_RPC_URL=http://aria2:6800/jsonrpc
+      - ARIA2_TOKEN=nas123456
+      - PROXY=http://host.docker.internal:7890 # 假设宿主机有代理
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  aria2:
+    image: p3terx/aria2-pro
+    container_name: aria2
+    environment:
+      - RPC_SECRET=nas123456
+      - RPC_PORT=6800
+    ports:
+      - "6800:6800"
+    volumes:
+      - ./downloads:/downloads
